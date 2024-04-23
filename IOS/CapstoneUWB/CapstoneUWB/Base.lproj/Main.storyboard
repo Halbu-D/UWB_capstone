@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="CapstoneUWB" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="QJV-Nt-Sya">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="연결 상태:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZDp-fJ-WaQ" userLabel="Connection state:">
+                                <rect key="frame" x="26" y="84" width="202" height="21"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="연결 안 됨" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XMJ-Z4-sFg" userLabel="Connection State Label">
+                                <rect key="frame" x="247" y="84" width="120" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="ciA-bv-n7L"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UWB 상태:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pfM-dR-bqE" userLabel="UWB State:">
+                                <rect key="frame" x="26" y="126" width="202" height="21"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="알 수 없음" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nyo-Z7-8wS" userLabel="UWB State Label">
+                                <rect key="frame" x="247" y="126" width="120" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Info" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="jKZ-ne-Isp">
+                                <rect key="frame" x="26" y="209" width="341" height="145"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="145" id="eEz-fo-WIa"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-.-m" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="CU7-ZP-3vb">
+                                <rect key="frame" x="26" y="393" width="341" height="261"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TTW-2o-9KY">
+                                <rect key="frame" x="104" y="743" width="185" height="42"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <state key="normal" title="Run Session"/>
+                                <connections>
+                                    <action selector="buttonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DoV-LR-K0c"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="8AF-D3-fST"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="8AF-D3-fST" firstAttribute="trailing" secondItem="TTW-2o-9KY" secondAttribute="trailing" constant="104" id="7rw-DL-Ndd"/>
+                            <constraint firstItem="8AF-D3-fST" firstAttribute="bottom" secondItem="CU7-ZP-3vb" secondAttribute="bottom" constant="164" id="8no-CH-THb"/>
+                            <constraint firstItem="CU7-ZP-3vb" firstAttribute="top" secondItem="jKZ-ne-Isp" secondAttribute="bottom" constant="39" id="C3M-bv-BTw"/>
+                            <constraint firstItem="TTW-2o-9KY" firstAttribute="leading" secondItem="8AF-D3-fST" secondAttribute="leading" constant="104" id="EjK-zB-bQI"/>
+                            <constraint firstItem="XMJ-Z4-sFg" firstAttribute="leading" secondItem="ZDp-fJ-WaQ" secondAttribute="trailing" constant="19" id="I3U-2x-vVv"/>
+                            <constraint firstItem="jKZ-ne-Isp" firstAttribute="trailing" secondItem="CU7-ZP-3vb" secondAttribute="trailing" id="MCE-t2-aSV"/>
+                            <constraint firstItem="8AF-D3-fST" firstAttribute="bottom" secondItem="TTW-2o-9KY" secondAttribute="bottom" constant="33" id="PCJ-e0-4q1"/>
+                            <constraint firstItem="XMJ-Z4-sFg" firstAttribute="trailing" secondItem="Nyo-Z7-8wS" secondAttribute="trailing" id="PWt-fu-y6B"/>
+                            <constraint firstItem="ZDp-fJ-WaQ" firstAttribute="baseline" secondItem="XMJ-Z4-sFg" secondAttribute="baseline" id="QJn-ce-jTK"/>
+                            <constraint firstItem="pfM-dR-bqE" firstAttribute="firstBaseline" secondItem="Nyo-Z7-8wS" secondAttribute="firstBaseline" id="RQj-xx-TmV"/>
+                            <constraint firstItem="jKZ-ne-Isp" firstAttribute="leading" secondItem="CU7-ZP-3vb" secondAttribute="leading" id="Roj-pO-zG8"/>
+                            <constraint firstItem="ZDp-fJ-WaQ" firstAttribute="firstBaseline" secondItem="XMJ-Z4-sFg" secondAttribute="firstBaseline" id="Uug-Dl-peX"/>
+                            <constraint firstItem="ZDp-fJ-WaQ" firstAttribute="trailing" secondItem="pfM-dR-bqE" secondAttribute="trailing" id="VLx-FM-uF2"/>
+                            <constraint firstItem="TTW-2o-9KY" firstAttribute="top" secondItem="CU7-ZP-3vb" secondAttribute="bottom" constant="89" id="W5N-Ms-rr1"/>
+                            <constraint firstItem="ZDp-fJ-WaQ" firstAttribute="top" secondItem="8AF-D3-fST" secondAttribute="top" constant="25" id="Y0b-4G-EX5"/>
+                            <constraint firstItem="jKZ-ne-Isp" firstAttribute="top" secondItem="pfM-dR-bqE" secondAttribute="bottom" constant="62" id="aIF-6N-wdq"/>
+                            <constraint firstItem="jKZ-ne-Isp" firstAttribute="centerX" secondItem="QJV-Nt-Sya" secondAttribute="centerX" id="aKV-Rg-Onk"/>
+                            <constraint firstItem="Nyo-Z7-8wS" firstAttribute="trailing" secondItem="jKZ-ne-Isp" secondAttribute="trailing" id="eKL-j8-KJi"/>
+                            <constraint firstItem="pfM-dR-bqE" firstAttribute="top" secondItem="ZDp-fJ-WaQ" secondAttribute="bottom" constant="21" id="eof-GO-bW6"/>
+                            <constraint firstItem="ZDp-fJ-WaQ" firstAttribute="leading" secondItem="8AF-D3-fST" secondAttribute="leading" constant="26" id="eto-PZ-v1V"/>
+                            <constraint firstItem="pfM-dR-bqE" firstAttribute="leading" secondItem="jKZ-ne-Isp" secondAttribute="leading" id="riD-Zx-n9u"/>
+                            <constraint firstItem="pfM-dR-bqE" firstAttribute="baseline" secondItem="Nyo-Z7-8wS" secondAttribute="baseline" id="sPv-nt-qZF"/>
+                            <constraint firstItem="ZDp-fJ-WaQ" firstAttribute="leading" secondItem="pfM-dR-bqE" secondAttribute="leading" id="wx3-4S-Uv9"/>
+                            <constraint firstItem="XMJ-Z4-sFg" firstAttribute="leading" secondItem="Nyo-Z7-8wS" secondAttribute="leading" id="xbE-FA-rY9"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="actionButton" destination="TTW-2o-9KY" id="hHM-pQ-Gya"/>
+                        <outlet property="connectionStateLabel" destination="XMJ-Z4-sFg" id="qCu-IV-BpR"/>
+                        <outlet property="distanceLabel" destination="CU7-ZP-3vb" id="I6b-aK-v3E"/>
+                        <outlet property="infoLabel" destination="jKZ-ne-Isp" id="Tmb-ff-b1H"/>
+                        <outlet property="uwbStateLabel" destination="Nyo-Z7-8wS" id="eLh-2e-7vH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="36" y="4"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
