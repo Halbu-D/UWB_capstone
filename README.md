@@ -8,8 +8,7 @@ UWB기반 출입 통제 시스템
     * IOS - nrf52840 + dwm3000evb
     * Android - esp32 + dw3000
 * 연결 구조
-|태그|앵커|
-|---|---|
-|IOS|nrf52840 + dwm3000evb|
-|Android + esp32|esp32|
-
+| 태그 | 앵커 |
+|------|------|
+| IOS | nrf52840 + dwm3000evb |
+| Android + esp32 | esp32 |
