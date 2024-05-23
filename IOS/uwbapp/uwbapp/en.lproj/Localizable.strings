@@ -1,0 +1,28 @@
+/* 
+  Localizable.strings
+  uwbapp
+
+  Created by Halbu on 4/28/24.
+  
+*/
+
+
+"Disabled" = "Disabled";
+"Connect" = "Connect";
+"NotConnected" = "Not Connected";
+"Disconnect" = "Disconnect";
+"SelectedAccessory" = "Selected Accessory";
+
+// NI
+"NIAccessRequired" = "Nearby Interactions access required. You can change access for NIAccessory in Settings.";
+"AccessRequired" = "Access Required";
+"NIAccessRequired.message" = "NIAccessory requires access to Nearby Interactions for this sample app. Use this string to explain to users which functionality will be enabled if they change Nearby Interactions access in Settings.";
+
+// Utils
+"-" = "-";
+"Cancel" = "Cancel";
+"GoSettings" = "Go to Settings";
+
+// Report data
+"meters" = "%0.1f m";
+"StartMeters" = "0.0 m";
