@@ -1,0 +1,174 @@
+#include "dw3000.h"
+
+#define PIN_RST 27
+#define PIN_IRQ 34
+#define PIN_SS 4
+
+#define RNG_DELAY_MS 1000
+#define TX_ANT_DLY 16385
+#define RX_ANT_DLY 16385
+#define ALL_MSG_COMMON_LEN 10
+#define ALL_MSG_SN_IDX 2
+#define RESP_MSG_POLL_RX_TS_IDX 10
+#define RESP_MSG_RESP_TX_TS_IDX 14
+#define RESP_MSG_TS_LEN 4
+#define POLL_TX_TO_RESP_RX_DLY_UUS 240
+#define RESP_RX_TIMEOUT_UUS 400
+
+/* 기본 통신 구성, 기본 비 STS DW 모드를 사용. */
+static dwt_config_t config = {
+    5,                /* 채널 번호 */
+    DWT_PLEN_128,     /* 프리앰블 길이. TX에서만 사용됨. */
+    DWT_PAC8,         /* 프리앰블 획득 청크 크기. RX에서만 사용. */
+    9,                /* TX 프리앰블 코드. TX에서만 사용. */
+    9,                /* RX 프리앰블 코드. RX에서만 사용. */
+    1,                /* 0은 표준 8 기호 SFD를 사용하는 경우, 1은 비표준 8 기호를 사용하는 경우, 2는 비표준 16 기호 SFD를 사용하는 경우, 3은 4z 8 기호 SDF 유형을 사용하는 경우 */
+    DWT_BR_6M8,       /* 데이터 비율 */
+    DWT_PHRMODE_STD,  /* PHY 헤더 모드 */
+    DWT_PHRRATE_STD,  /* PHY 헤더 비율 */
+    (129 + 8 - 8),    /* SFD 타임아웃(프리앰블 길이 + 1 + SFD 길이 - PAC 크기). RX에서만 사용. */
+    DWT_STS_MODE_OFF, /* STS 비활성화 */
+    DWT_STS_LEN_64,   /* STS 길이 Enum dwt_sts_lengths_e에서 허용된 값 참조 */
+    DWT_PDOA_M0       /* PDOA 모드 끄기 */
+};
+
+static uint8_t tx_poll_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 'W', 'A', 'V', 'E', 0xE0, 0, 0};
+static uint8_t rx_resp_msg[] = {0x41, 0x88, 0, 0xCA, 0xDE, 'V', 'E', 'W', 'A', 0xE1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8_t frame_seq_nb = 0;
+static uint8_t rx_buffer[20];
+static uint32_t status_reg = 0;
+static double tof;
+static double distance;
+extern dwt_txconfig_t txconfig_options;
+
+void setup()
+{
+  Serial.begin(115200);
+  UART_init();
+
+  spiBegin(PIN_IRQ, PIN_RST);
+  spiSelect(PIN_SS);
+
+  delay(2); // DW3000을 시작하는 데 필요한 시간(INIT_RC에서 IDLE_RC로 전환하거나 SPIRDY 이벤트를 기다릴 수 있음)
+
+  while (!dwt_checkidlerc()) // 진행하기 전에 DWIC가 IDLE_RC에 있는지 확인
+  {
+    UART_puts("IDLE FAILED\r\n");
+    while (1)
+      ;
+  }
+
+  if (dwt_initialise(DWT_DW_INIT) == DWT_ERROR)
+  {
+    UART_puts("INIT FAILED\r\n");
+    while (1)
+      ;
+  }
+
+  // 각 TX에 대해 D1 LED가 DW3000 빨간색 평가 실드 보드에서 깜박이도록 디버그를 위해 여기에서 LED를 활성화
+  dwt_setleds(DWT_LEDS_ENABLE | DWT_LEDS_INIT_BLINK);
+
+  /* DW IC 구성 */
+  if (dwt_configure(&config)) // dwt_configure가 DWT_ERROR을 반환하면 PLL 또는 RX 보정에 실패한 경우 호스트가 디바이스를 재설정해야 함.
+  {
+    UART_puts("CONFIG FAILED\r\n");
+    while (1)
+      ;
+  }
+
+  /* TX 스펙트럼 파라미터(전력, PG 지연 및 PG 카운트) 구성 */
+  dwt_configuretxrf(&txconfig_options);
+
+  /* 기본 안테나 지연 값을 적용 */
+  dwt_setrxantennadelay(RX_ANT_DLY);
+  dwt_settxantennadelay(TX_ANT_DLY);
+
+  /* 예상 응답의 지연 및 시간 초과를 설정
+   * 이 예에서는 항상 동일한 지연 및 시간 초과를 갖는 수신 프레임을 하나만 처리하므로 이 값은 모두 여기에서 한 번 설정할 수 있음. */
+  dwt_setrxaftertxdelay(POLL_TX_TO_RESP_RX_DLY_UUS);
+  dwt_setrxtimeout(RESP_RX_TIMEOUT_UUS);
+
+  /* 다음으로 GPIO 5 및 6에서 TX/RX 상태 출력을 활성화하여 디버깅을 지원하고 TX/RX LED도 활성화 가능
+   * 실제 저전력 애플리케이션에서는 LED 사용 불가 */
+  dwt_setlnapamode(DWT_LNA_ENABLE | DWT_PA_ENABLE);
+
+  Serial.println("Range RX");
+  Serial.println("Setup over........");
+}
+
+void loop()
+{
+  /* DW IC에 프레임 데이터를 작성하고 전송을 준비 */
+  tx_poll_msg[ALL_MSG_SN_IDX] = frame_seq_nb;
+  dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_TXFRS_BIT_MASK);
+  dwt_writetxdata(sizeof(tx_poll_msg), tx_poll_msg, 0); /* TX 버퍼의 오프셋이 0 */
+  dwt_writetxfctrl(sizeof(tx_poll_msg), 0, 1);          /* TX 버퍼의 오프셋이 0 */
+
+  /* 프레임이 전송되고 지연이 발생한 후 자동으로 수신이 활성화되도록 응답이 예상됨을 나타내는 전송 시작
+   * tx 지연 ()이 경과한 후 dwt_setrx로 설정 */
+  dwt_starttx(DWT_START_TX_IMMEDIATE | DWT_RESPONSE_EXPECTED);
+
+  /* 전송이 올바르게 달성되었다고 가정하고, 프레임 수신 또는 오류/타임아웃을 위해 폴링 */
+  while (!((status_reg = dwt_read32bitreg(SYS_STATUS_ID)) & (SYS_STATUS_RXFCG_BIT_MASK | SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR)))
+  {
+  };
+
+  /* 폴 메시지 전송 후 증가하는 프레임 시퀀스 번호 */
+  frame_seq_nb++;
+
+  if (status_reg & SYS_STATUS_RXFCG_BIT_MASK)
+  {
+    uint32_t frame_len;
+
+    /* DW IC 상태 레지스터에서 양호한 RX 프레임 이벤트를 지움 */
+    dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_RXFCG_BIT_MASK);
+
+    /* 프레임이 수신되고 로컬 버퍼로 읽음 */
+    frame_len = dwt_read32bitreg(RX_FINFO_ID) & RXFLEN_MASK;
+    if (frame_len <= sizeof(rx_buffer))
+    {
+      dwt_readrxdata(rx_buffer, frame_len, 0);
+
+      /* 프레임이 동반자 "SS TWR 응답기" 예제에서 예상되는 응답인지 확인
+       * 프레임의 시퀀스 번호 필드는 관련이 없으므로, 프레임의 검증을 단순화하기 위해 클리어 */
+      rx_buffer[ALL_MSG_SN_IDX] = 0;
+      if (memcmp(rx_buffer, rx_resp_msg, ALL_MSG_COMMON_LEN) == 0)
+      {
+        uint32_t poll_tx_ts, resp_rx_ts, poll_rx_ts, resp_tx_ts;
+        int32_t rtd_init, rtd_resp;
+        float clockOffsetRatio;
+
+        /* 폴 전송 및 응답 수신 타임스탬프를 검색 */
+        poll_tx_ts = dwt_readtxtimestamplo32();
+        resp_rx_ts = dwt_readrxtimestamplo32();
+
+      
+        /* 캐리어 적분기 값을 읽고 클럭 오프셋 비율을 계산 */
+        clockOffsetRatio = ((float)dwt_readclockoffset()) / (uint32_t)(1 << 26);
+
+        /* 응답 메시지에 포함된 타임스탬프를 가져옴 */
+        resp_msg_get_ts(&rx_buffer[RESP_MSG_POLL_RX_TS_IDX], &poll_rx_ts);
+        resp_msg_get_ts(&rx_buffer[RESP_MSG_RESP_TX_TS_IDX], &resp_tx_ts);
+
+        /* 다양한 로컬 및 원격 클럭 속도를 보정하기 위해 클럭 오프셋 비율을 사용하여 비행 및 거리 시간 계산 */
+        rtd_init = resp_rx_ts - poll_tx_ts;
+        rtd_resp = resp_tx_ts - poll_rx_ts;
+
+        tof = ((rtd_init - rtd_resp * (1 - clockOffsetRatio)) / 2.0) * DWT_TIME_UNITS;
+        distance = tof * SPEED_OF_LIGHT;
+
+        /* 계산된 거리를 LCD에 표시 */
+        snprintf(dist_str, sizeof(dist_str), "DIST: %3.2f m", distance);
+        test_run_info((unsigned char *)dist_str);
+      }
+    }
+  }
+  else
+  {
+    /* DW IC 상태 레지스터에서 RX 오류/타임아웃 이벤트를 지움 */
+    dwt_write32bitreg(SYS_STATUS_ID, SYS_STATUS_ALL_RX_TO | SYS_STATUS_ALL_RX_ERR);
+  }
+
+  /* 레인징 교환 사이의 지연을 실행 */
+  Sleep(RNG_DELAY_MS);
+}
