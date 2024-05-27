@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity() {
     private val PREFS_NAME = "MyPrefs"
     private val PREF_EDIT_TEXT_MESSAGE = "editTextMessage"
 
+    private var canSendUdpMessage = true
+
     private val usbReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
@@ -75,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             val permissionIntent = PendingIntent.getBroadcast(context, 0, Intent(ACTION_USB_PERMISSION).apply {
                                 putExtra(UsbManager.EXTRA_DEVICE, it)
-                            }, PendingIntent.FLAG_MUTABLE) // 변경됨
+                            }, PendingIntent.FLAG_MUTABLE)
                             usbManager.requestPermission(it, permissionIntent)
                         }
                     }
@@ -165,7 +167,7 @@ class MainActivity : AppCompatActivity() {
             readRunnable = object : Runnable {
                 override fun run() {
                     readFromUsbSerial()
-                    handler.postDelayed(this, 1)
+                    handler.postDelayed(this, 0)
                 }
             }
 
@@ -181,13 +183,13 @@ class MainActivity : AppCompatActivity() {
     private fun readFromUsbSerial() {
         port?.let { port ->
             try {
-                val buffer = ByteArray(16)
+                val buffer = ByteArray(64)
                 val numBytesRead = port.read(buffer, 1000)
                 val readData = String(buffer, 0, numBytesRead)
 
-                runOnUiThread {
+                /*runOnUiThread {
                     textView.text = readData
-                }
+                }*/
                 Log.d(TAG, "데이터 읽기 성공: $readData")
                 checkAndOpen(readData)
             } catch (e: IOException) {
@@ -201,12 +203,21 @@ class MainActivity : AppCompatActivity() {
     private fun checkAndOpen(string: String) {
 
             val flaotValue = string.trim().toFloatOrNull()
-            Log.d(TAG, "float $flaotValue")
-            if (flaotValue != null && flaotValue < 0.1) {
-                Log.d(TAG, "open $flaotValue")
-                val message = editTextMessage.text.toString()
-                sendUdpMessage(message)
-                Thread.sleep(5000) //5초 대기
+            if (flaotValue != null) {
+                runOnUiThread {
+                    textView.text = string
+                }
+                if(flaotValue < 0.1 && canSendUdpMessage) {
+                    val message = editTextMessage.text.toString()
+                    sendUdpMessage(message)
+                    Log.d(TAG, "open ${string}")
+                    canSendUdpMessage = false
+                    handler.postDelayed({
+                        Log.d(TAG, "5초 후에 실행됨")
+                        canSendUdpMessage = true
+                    }, 5000)
+                }
+
         }
     }
 
