@@ -31,6 +31,7 @@
 		EA51EAE22BDBF3BD00EAD39F /* AccessoriesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA51EAE12BDBF3BD00EAD39F /* AccessoriesTable.swift */; };
 		EA51EAE42BDBF3C900EAD39F /* SingleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA51EAE32BDBF3C900EAD39F /* SingleCell.swift */; };
 		EA891AFE2BDE75B300D61C6F /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA891AFD2BDE75B300D61C6F /* NotificationManager.swift */; };
+		EACD09222C1612F800DCEF6A /* UDPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACD09212C1612F800DCEF6A /* UDPClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		EA51EAE12BDBF3BD00EAD39F /* AccessoriesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessoriesTable.swift; sourceTree = "<group>"; };
 		EA51EAE32BDBF3C900EAD39F /* SingleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCell.swift; sourceTree = "<group>"; };
 		EA891AFD2BDE75B300D61C6F /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		EACD09212C1612F800DCEF6A /* UDPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDPClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +134,7 @@
 		EA51EAAF2BDBEA1B00EAD39F /* uwbapp */ = {
 			isa = PBXGroup;
 			children = (
+				EACD09202C1612DE00DCEF6A /* UDP */,
 				EA42753F2BDE9999006210C2 /* BluetoothSupport */,
 				EA891AFC2BDE759E00D61C6F /* NotificationManager */,
 				EA51EACC2BDBEF1B00EAD39F /* DeviceView */,
@@ -193,6 +196,14 @@
 				EA891AFD2BDE75B300D61C6F /* NotificationManager.swift */,
 			);
 			path = NotificationManager;
+			sourceTree = "<group>";
+		};
+		EACD09202C1612DE00DCEF6A /* UDP */ = {
+			isa = PBXGroup;
+			children = (
+				EACD09212C1612F800DCEF6A /* UDPClient.swift */,
+			);
+			path = UDP;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,6 +296,7 @@
 				EA51EAB32BDBEA1B00EAD39F /* SceneDelegate.swift in Sources */,
 				EA51EAE42BDBF3C900EAD39F /* SingleCell.swift in Sources */,
 				EA4275352BDE7D9D006210C2 /* SettingsViewController.swift in Sources */,
+				EACD09222C1612F800DCEF6A /* UDPClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

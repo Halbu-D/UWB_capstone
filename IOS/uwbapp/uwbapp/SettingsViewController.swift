@@ -11,11 +11,9 @@ import NearbyInteraction
 
 public struct Settings {
     var pushNotificationEnabled: Bool?
-    var userID: String?
     
     init() {
         pushNotificationEnabled = true
-        userID = nil
     }
 }
 
@@ -57,6 +55,8 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        id.text = UserDefaults.standard.string(forKey: "UserID")
+        
         if appSettings.pushNotificationEnabled!{
             notificationSetting.setImage(UIImage(assetIdentifier: .SwitchOn), for: .normal)
         }
@@ -85,6 +85,6 @@ class SettingsViewController: UIViewController {
     }
     
     @IBAction func saveID(_ sender: Any) {
-        //
+        UserDefaults.standard.set(id.text, forKey: "UserID")
     }
 }

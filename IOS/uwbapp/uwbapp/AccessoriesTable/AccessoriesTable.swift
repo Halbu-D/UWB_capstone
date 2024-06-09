@@ -14,6 +14,9 @@ class AccessoriesTable: UITableView, UITableViewDelegate, UITableViewDataSource 
     let logger = os.Logger(subsystem: "com.capstone.uwbapp", category: "AccessoriesTable")
     
     var tableDelegate: TableProtocol?
+    var udpClient: UDPClient?
+    var canExecute = true
+    var timer: Timer?
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
@@ -81,7 +84,10 @@ class AccessoriesTable: UITableView, UITableViewDelegate, UITableViewDataSource 
             if cell.uniqueID == deviceID {
                 //print(cell.accessoryButton.currentTitle)
                 cell.distanceLabel.text = String(format: "meters".localized, distance)
-                print(distance) // 거리
+                if(distance < 0.5){
+                    executeFunction()
+                    print(distance)
+                }
             }
         }
     }
@@ -156,4 +162,44 @@ class AccessoriesTable: UITableView, UITableViewDelegate, UITableViewDataSource 
     @objc func buttonAction(_ sender: UIButton) {
         tableDelegate?.buttonAction(sender)
     }
+    //MARK: - UDP 통신
+    
+    func SendData(){
+        udpClient = UDPClient(host: "capstone6.ddns.net", port: 8080)
+        udpClient?.start()
+        
+        guard let userID = UserDefaults.standard.string(forKey: "UserID"),
+              let uidData = userID.data(using: .utf8) else {
+            return
+        }
+        //var tmp: Data = Data(textField.text!.utf8)
+        // Give the connection some time to establish
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
+            self.udpClient?.send(data: uidData)
+        }
+
+        // When you are done
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+            self.udpClient?.stop()
+        }
+    }
+    
+    func executeFunction(){
+        guard canExecute else{
+            return
+        }
+        
+        SendData()
+        
+        canExecute = false
+        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: false){ [weak self] _ in
+            self?.canExecute = true
+        }
+        
+        
+    }
+    
 }
+
+
+
