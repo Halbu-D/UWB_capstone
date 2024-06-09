@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var textView: TextView
     private lateinit var editTextMessage: EditText
-    private lateinit var buttonSend: Button
+    //private lateinit var buttonSend: Button
 
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var readRunnable: Runnable
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
         textView = findViewById(R.id.textView)
         editTextMessage = findViewById(R.id.editTextMessage)
-        buttonSend = findViewById(R.id.buttonSend)
+        //buttonSend = findViewById(R.id.buttonSend)
 
         usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
 
@@ -202,22 +202,24 @@ class MainActivity : AppCompatActivity() {
     }
     private fun checkAndOpen(string: String) {
 
-            val flaotValue = string.trim().toFloatOrNull()
-            if (flaotValue != null) {
-                runOnUiThread {
-                    textView.text = string
-                }
-                if(flaotValue < 0.1 && canSendUdpMessage) {
-                    val message = editTextMessage.text.toString()
-                    sendUdpMessage(message)
-                    Log.d(TAG, "open ${string}")
-                    canSendUdpMessage = false
-                    handler.postDelayed({
-                        Log.d(TAG, "5초 후에 실행됨")
-                        canSendUdpMessage = true
-                    }, 5000)
-                }
-
+        val flaotValue = string.trim().toFloatOrNull()
+        //val pattern = Regex("DIST: ([0-9]*\\.?[0-9]+)m")
+        //val matchResult = pattern.find(string)
+        //val floatValue = matchResult.groupValues[1].toFloatOrNull()
+        if (flaotValue != null) {
+            runOnUiThread {
+                textView.text = "${string}m"
+            }
+            if(flaotValue < 0.5 && canSendUdpMessage) {
+                val message = editTextMessage.text.toString()
+                sendUdpMessage(message)
+                Log.d(TAG, "open ${string}")
+                canSendUdpMessage = false
+                handler.postDelayed({
+                    Log.d(TAG, "5초 후에 실행됨")
+                    canSendUdpMessage = true
+                                    }, 5000)
+            }
         }
     }
 

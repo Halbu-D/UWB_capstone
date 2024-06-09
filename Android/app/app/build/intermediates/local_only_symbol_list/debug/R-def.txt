@@ -4,7 +4,6 @@ color black
 color white
 drawable ic_launcher_background
 drawable ic_launcher_foreground
-id buttonSend
 id editTextMessage
 id textView
 layout activity_main

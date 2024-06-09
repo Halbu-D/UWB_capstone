@@ -12,12 +12,12 @@
         "source": "C:\\Users\\SAMSUNG\\.gradle\\daemon\\8.0\\com.example.usbserial.app-main-33:\\mipmap-hdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.example.usbserial.app-merged_res-31:/xml_device_filter.xml.flat",
-        "source": "com.example.usbserial.app-main-33:/xml/device_filter.xml"
-    },
-    {
         "merged": "C:\\Users\\SAMSUNG\\.gradle\\daemon\\8.0\\com.example.usbserial.app-merged_res-31:\\layout_activity_main.xml.flat",
         "source": "C:\\Users\\SAMSUNG\\.gradle\\daemon\\8.0\\com.example.usbserial.app-main-33:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\SAMSUNG\\.gradle\\daemon\\8.0\\com.example.usbserial.app-merged_res-31:\\xml_device_filter.xml.flat",
+        "source": "C:\\Users\\SAMSUNG\\.gradle\\daemon\\8.0\\com.example.usbserial.app-main-33:\\xml\\device_filter.xml"
     },
     {
         "merged": "C:\\Users\\SAMSUNG\\.gradle\\daemon\\8.0\\com.example.usbserial.app-merged_res-31:\\xml_data_extraction_rules.xml.flat",
@@ -66,6 +66,10 @@
     {
         "merged": "C:\\Users\\SAMSUNG\\.gradle\\daemon\\8.0\\com.example.usbserial.app-merged_res-31:\\mipmap-anydpi_ic_launcher.xml.flat",
         "source": "C:\\Users\\SAMSUNG\\.gradle\\daemon\\8.0\\com.example.usbserial.app-main-33:\\mipmap-anydpi\\ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.usbserial.app-merged_res-31:/layout_activity_main.xml.flat",
+        "source": "com.example.usbserial.app-main-33:/layout/activity_main.xml"
     },
     {
         "merged": "C:\\Users\\SAMSUNG\\.gradle\\daemon\\8.0\\com.example.usbserial.app-merged_res-31:\\mipmap-xhdpi_ic_launcher.webp.flat",
