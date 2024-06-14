@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 from time import sleep
 
-servoPin = 12
+servoPin = 12 #서보모터 사용 핀
 SERVO_MAX = 12
 SERVO_MIN = 3
 
@@ -28,5 +28,3 @@ if __name__ == "__main__":
 	servo.stop()
 	
 	GPIO.cleanup()
-	
-	
